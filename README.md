@@ -1,6 +1,12 @@
 ## 图书管理系统框架使用指南——Java
 
+## 详细指导文档
+
+详见链接：<https://www.yuque.com/yingchengjun/ozqlqv/gnwbgi9my2ci7has#r7YXk/>
+
+
 ### 环境要求
+
 - JDK 1.8.0及以上，可通过`java -version`命令查看
 - Apache Maven 3.6.3及以上，可通过`mvn -v`命令查看
 
