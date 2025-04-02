@@ -10,10 +10,10 @@
         <div style="display: flex;flex-wrap: wrap; justify-content: start;">
 
             <!-- 借书证卡片 -->
-            <div class="cardBox" v-for="card in cards" v-show="card.name.includes(toSearch)" :key="card.id">
-                <div>
+            <div class="cardBox" v-for="card in cards" v-show="card.name.includes(toSearch)" :key="card.cardId">
+                <div style="height: 100%; position: relative;">
                     <!-- 卡片标题 -->
-                    <div style="font-size: 25px; font-weight: bold;">No. {{ card.id }}</div>
+                    <div style="font-size: 25px; font-weight: bold;">No. {{ card.cardId }}</div>
 
                     <el-divider />
 
@@ -24,15 +24,18 @@
                         <p style="padding: 2.5px;"><span style="font-weight: bold;">类型：</span>{{ card.type }}</p>
                     </div>
 
-                    <el-divider />
+                    <div style="position: absolute; bottom: 25px; left: 0; right: 0;">
+                        <el-divider />
+                    </div>
+                    
 
                     <!-- 卡片操作 -->
-                    <div style="margin-top: 10px;">
-                        <el-button type="primary" :icon="Edit" @click="this.toModifyInfo.id = card.id, this.toModifyInfo.name = card.name,
+                    <div style="position: absolute; bottom: 5px; left: 0; right: 0;">
+                        <el-button type="primary" :icon="Edit" @click="this.toModifyInfo.cardId = card.cardId, this.toModifyInfo.name = card.name,
                 this.toModifyInfo.department = card.department, this.toModifyInfo.type = card.type,
                 this.modifyCardVisible = true" circle />
                         <el-button type="danger" :icon="Delete" circle
-                            @click="this.toRemove = card.id, this.removeCardVisible = true"
+                            @click="this.toRemove = card.cardId, this.removeCardVisible = true"
                             style="margin-left: 30px;" />
                     </div>
 
@@ -78,7 +81,7 @@
 
 
         <!-- 修改信息对话框 -->   
-        <el-dialog v-model="modifyCardVisible" :title="'修改信息(借书证ID: ' + this.toModifyInfo.id + ')'" width="30%"
+        <el-dialog v-model="modifyCardVisible" :title="'修改信息(借书证ID: ' + this.toModifyInfo.cardId + ')'" width="30%"
             align-center>
             <div style="margin-left: 2vw; font-weight: bold; font-size: 1rem; margin-top: 20px; ">
                 姓名：
@@ -130,12 +133,12 @@ export default {
     data() {
         return {
             cards: [{ // 借书证列表
-                id: 1,
+                cardId: 1,
                 name: '小明',
                 department: '计算机学院',
                 type: '学生'
             }, {
-                id: 2,
+                cardId: 2,
                 name: '王老师',
                 department: '计算机学院',
                 type: '教师'
@@ -165,7 +168,7 @@ export default {
             },
             modifyCardVisible: false, // 修改信息对话框可见性
             toModifyInfo: { // 待修改借书证信息
-                id: 0,
+                cardId: 0,
                 name: '',
                 department: '',
                 type: '学生'
