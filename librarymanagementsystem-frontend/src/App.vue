@@ -31,7 +31,7 @@
                 <el-icon>
                   <Tickets />
                 </el-icon>
-                <span>借书记录查询</span>
+                <span>借还书管理</span>
               </el-menu-item>
 
             </el-menu>

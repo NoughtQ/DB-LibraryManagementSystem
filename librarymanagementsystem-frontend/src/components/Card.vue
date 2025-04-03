@@ -1,10 +1,7 @@
 <template>
     <el-scrollbar height="100%" style="width: 100%;">
-        <!-- 标题和搜索框 -->
-        <div style="margin-top: 20px; margin-left: 40px; font-size: 2em; font-weight: bold; ">借书证管理
-            <el-input v-model="toSearch" :prefix-icon="Search"
-                style=" width: 15vw;min-width: 150px; margin-left: 30px; margin-right: 30px; float: right;" clearable />
-        </div>
+        <!-- 标题 -->
+        <div style="margin-top: 20px; margin-left: 40px; font-size: 2em; font-weight: bold; ">借书证管理</div>
 
         <!-- 借书证卡片显示区 -->
         <div style="display: flex;flex-wrap: wrap; justify-content: start;">
@@ -52,7 +49,6 @@
 
         </div>
 
-
         <!-- 新建借书证对话框 -->
         <el-dialog v-model="newCardVisible" title="新建借书证" width="30%" align-center>
             <div style="margin-left: 2vw; font-weight: bold; font-size: 1rem; margin-top: 20px; ">
@@ -78,7 +74,6 @@
                 </span>
             </template>
         </el-dialog>
-
 
         <!-- 修改信息对话框 -->   
         <el-dialog v-model="modifyCardVisible" :title="'修改信息(借书证ID: ' + this.toModifyInfo.cardId + ')'" width="30%"
@@ -132,7 +127,7 @@ import axios from 'axios'
 export default {
     data() {
         return {
-            cards: [{ // 借书证列表
+            cards: [{                         // 借书证列表
                 cardId: 1,
                 name: '小明',
                 department: '计算机学院',
@@ -147,8 +142,8 @@ export default {
             Delete,
             Edit,
             Search,
-            toSearch: '', // 搜索内容
-            types: [ // 借书证类型
+            toSearch: '',                     // 搜索内容
+            types: [                          // 借书证类型
                 {
                     value: '教师',
                     label: '教师',
@@ -158,16 +153,16 @@ export default {
                     label: '学生',
                 }
             ],
-            newCardVisible: false, // 新建借书证对话框可见性
-            removeCardVisible: false, // 删除借书证对话框可见性
-            toRemove: 0, // 待删除借书证号
-            newCardInfo: { // 待新建借书证信息
+            newCardVisible: false,            // 新建借书证对话框可见性
+            removeCardVisible: false,         // 删除借书证对话框可见性
+            toRemove: 0,                      // 待删除借书证号
+            newCardInfo: {                    // 待新建借书证信息
                 name: '',
                 department: '',
                 type: '学生'
             },
-            modifyCardVisible: false, // 修改信息对话框可见性
-            toModifyInfo: { // 待修改借书证信息
+            modifyCardVisible: false,         // 修改信息对话框可见性
+            toModifyInfo: {                   // 待修改借书证信息
                 cardId: 0,
                 name: '',
                 department: '',
@@ -176,39 +171,78 @@ export default {
         }
     },
     methods: {
+        // 新建借书证处理函数
         ConfirmNewCard() {
-            // 发出POST请求
-            axios.post("/card",
-                { // 请求体
+            axios.post("/card", {
                     name: this.newCardInfo.name,
                     department: this.newCardInfo.department,
                     type: this.newCardInfo.type
                 })
                 .then(response => {
-                    ElMessage.success("借书证新建成功") // 显示消息提醒
-                    this.newCardVisible = false // 将对话框设置为不可见
-                    this.QueryCards() // 重新查询借书证以刷新页面
+                    ElMessage.success("借书证新建成功")
+                    this.newCardVisible = false 
+                    this.QueryCards()
                 })
+                .catch(error => {
+                    let errorMsg = "借书证创建失败，原因：";
+                    if (error.response && error.response.data) {
+                        errorMsg += error.response.data;
+                    }
+                    console.error("借书证创建错误详情:", error);
+                    ElMessage.error(errorMsg);
+                });
         },
+
+        // 修改借书证信息处理函数
         ConfirmModifyCard() {
-            // TODO: YOUR CODE HERE
+            axios.put("/card",
+                {
+                    cardId: this.toModifyInfo.cardId,
+                    name: this.toModifyInfo.name,
+                    department: this.toModifyInfo.department,
+                    type: this.toModifyInfo.type
+                })
+                .then(response => {
+                    ElMessage.success("借书证修改成功")
+                    this.modifyCardVisible = false
+                    this.QueryCards()
+                })
+                .catch(error => {
+                    let errorMsg = "借书证修改失败，原因：";
+                    if (error.response && error.response.data) {
+                        errorMsg += error.response.data;
+                    }
+                    console.error("借书证修改错误详情:", error);
+                    ElMessage.error(errorMsg);
+                });
         },
+
+        // 移除借书证处理函数
         ConfirmRemoveCard() {
-            // TODO: YOUR CODE HERE
+            axios.delete(`/card?cardId=${this.toRemove}`)
+                .then(response => {
+                    ElMessage.success("借书证删除成功")
+                    this.removeCardVisible = false
+                    this.QueryCards()
+                })
+                .catch(error => {
+                    ElMessage.error("借书证删除失败");
+                });
         },
         QueryCards() {
-            this.cards = [] // 清空列表
-            let response = axios.get('/card') // 向/card发出GET请求
+            this.cards = []
+            let response = axios.get('/card')
                 .then(response => {
-                    let cards = response.data // 接收响应负载
-                    cards.forEach(card => { // 对于每个借书证
-                        this.cards.push(card) // 将其加入到列表中
+                    let cards = response.data
+                    cards.forEach(card => {
+                        this.cards.push(card)
                     })
                 })
         }
     },
-    mounted() { // 当页面被渲染时
-        this.QueryCards() // 查询借书证
+    // 当页面被渲染时，显示全部借书证
+    mounted() { 
+        this.QueryCards()
     }
 }
 
@@ -221,7 +255,8 @@ export default {
     width: 200px;
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
     text-align: center;
-    margin-top: 40px;
+    margin-top: 20px;
+    margin-bottom: 20px;
     margin-left: 27.5px;
     margin-right: 10px;
     padding: 7.5px;
@@ -232,7 +267,8 @@ export default {
 .newCardBox {
     height: 300px;
     width: 200px;
-    margin-top: 40px;
+    margin-top: 20px;
+    margin-bottom: 20px;
     margin-left: 27.5px;
     margin-right: 10px;
     padding: 7.5px;

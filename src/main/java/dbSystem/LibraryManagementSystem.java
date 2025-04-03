@@ -151,6 +151,15 @@ public interface LibraryManagementSystem {
     ApiResult registerCard(Card card);
 
     /**
+     * modify a card's information by card_id.card_id.
+     *
+     * Note that you should not modify its card_id!
+     *
+     * @param card the card to be modified
+     */
+    ApiResult modifyCardInfo(Card card);
+
+    /**
      * simply remove a card.
      *
      * Note that if there exists any un-returned books under this user,

@@ -43,13 +43,6 @@ public class Main {
                     log.warning("Failed to release connection.");
                 }
             }));
-
-            // release database connection handler(basic part)
-//            if (connector.release()) {
-//                log.info("Success to release connection.");
-//            } else {
-//                log.warning("Failed to release connection.");
-//            }
          
         } catch (Exception e) {
             e.printStackTrace();
