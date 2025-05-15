@@ -99,9 +99,9 @@ public class CardHandler implements HttpHandler {
         }
         if (jsonMap.containsKey("type")) {
             String typeStr = (String) jsonMap.get("type");
-            if ("学生".equals(typeStr)) {
+            if ("Student".equals(typeStr)) {
                 card.setType(Card.CardType.Student);
-            } else if ("教师".equals(typeStr)) {
+            } else if ("Teacher".equals(typeStr)) {
                 card.setType(Card.CardType.Teacher);
             }
         }
@@ -159,12 +159,15 @@ public class CardHandler implements HttpHandler {
         }
         if (jsonMap.containsKey("type")) {
             String typeStr = (String) jsonMap.get("type");
+            System.out.println(typeStr);
             if ("Student".equals(typeStr)) {
                 card.setType(Card.CardType.Student);
             } else if ("Teacher".equals(typeStr)) {
                 card.setType(Card.CardType.Teacher);
             }
         }
+
+        System.out.println(card);
 
         ApiResult result = library.modifyCardInfo(card);
 
@@ -219,10 +222,10 @@ public class CardHandler implements HttpHandler {
         exchange.getResponseHeaders().set("Content-Type", "text/plain");
 
         if (result.ok) {
-            message = "Card removed successfully";
+            message = "借书证删除成功";
             exchange.sendResponseHeaders(200, message.getBytes().length);
         } else {
-            message = result.message != null ? result.message : "Failed to remove card";
+            message = result.message != null ? result.message : "借书证删除失败";
             exchange.sendResponseHeaders(400, message.getBytes().length);
         }
 

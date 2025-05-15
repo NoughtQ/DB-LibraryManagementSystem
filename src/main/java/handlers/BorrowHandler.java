@@ -60,7 +60,6 @@ public class BorrowHandler implements HttpHandler {
 
     // 根据借书证 ID 查询特定借阅记录
     private void handleGetRequest(HttpExchange exchange) throws IOException {
-        // 获取请求参数中的 cardID
         String query = exchange.getRequestURI().getQuery();
         int cardId = -1;
         if (query != null && query.startsWith("cardId=")) {
@@ -82,7 +81,7 @@ public class BorrowHandler implements HttpHandler {
             statusCode = 200;
         } else {
             response = "[]";
-            statusCode = 200; // 返回空数组而不是错误
+            statusCode = 200;
         }
 
         byte[] responseBytes = response.getBytes();

@@ -90,12 +90,8 @@ public class LibraryManagementSystemImpl implements LibraryManagementSystem {
                 return new ApiResult(false, "Book doesn't exist");
             }
             int stock = rs.getInt("stock");
-//            System.out.println("stock: " + stock);
-//            System.out.println("deltaStock: " + deltaStock);
-//            System.out.println("stock + deltaStock: " + (stock + deltaStock));
             // If it's negative, terminate the operation too
             if (stock + deltaStock < 0) {
-
                 return new ApiResult(false, "Stock can't be negative");
             }
 
@@ -124,30 +120,14 @@ public class LibraryManagementSystemImpl implements LibraryManagementSystem {
             conn.setAutoCommit(false);
 
             PreparedStatement storePStmt = conn.prepareStatement(
-                "INSERT INTO book (category, title, press, publish_year, author, price, stock) VALUES (?, ?, ?, ?, ?, ?, ?)",
-                    Statement.RETURN_GENERATED_KEYS
+            "INSERT INTO book (category, title, press, publish_year, author, price, stock) VALUES (?, ?, ?, ?, ?, ?, ?)",
+                Statement.RETURN_GENERATED_KEYS
             );
             ResultSet rs;
 
             // Store books in order
             for (Book book : books) {
-//                // Check if the book already exists in the library
-//                PreparedStatement pStmt = conn.prepareStatement(
-//                "SELECT * FROM book WHERE category = ? AND title = ? AND press = ? AND publish_year = ? and author = ?"
-//                );
-//                pStmt.setString(1, book.getCategory());
-//                pStmt.setString(2, book.getTitle());
-//                pStmt.setString(3, book.getPress());
-//                pStmt.setInt(4, book.getPublishYear());
-//                pStmt.setString(5, book.getAuthor());
-//                ResultSet rs = pStmt.executeQuery();
-//                // If so, terminate the operation
-//                if (rs.next()) {
-//                    return new ApiResult(false, "Book already exists");
-//                }
-
                 // Try to store the new book
-
                 storePStmt.setString(1, book.getCategory());
                 storePStmt.setString(2, book.getTitle());
                 storePStmt.setString(3, book.getPress());
@@ -429,18 +409,7 @@ public class LibraryManagementSystemImpl implements LibraryManagementSystem {
             conn.setAutoCommit(false);
             ResultSet rs;
 
-//            // Firstly check if the book exists
-//            PreparedStatement getStockPtStmt = conn.prepareStatement(
-//                "SELECT stock FROM borrow WHERE book_id = ? FOR UPDATE"    // Add lock
-//            );
-//            getStockPtStmt.setInt(1, borrow.getBookId());
-//            rs = getStockPtStmt.executeQuery();
-//            if (!rs.next()) {
-//                return new ApiResult(false, "Book doesn't exist");
-//            }
-//            int stock = rs.getInt("stock");
-
-            // Then check if the user has borrowed the book
+            // Check if the user has borrowed the book
             PreparedStatement checkPStmt = conn.prepareStatement(
                 "SELECT * FROM borrow WHERE book_id = ? AND card_id = ? AND borrow_time = ? FOR UPDATE"    // Add lock
             );
@@ -513,10 +482,6 @@ public class LibraryManagementSystemImpl implements LibraryManagementSystem {
             );
             borrowHistoryPStmt.setInt(1, cardId);
             rs = borrowHistoryPStmt.executeQuery();
-            // Then check if the user has borrowed any book
-//            if (!rs.next()) {
-//                return new ApiResult(false, "The user hasn't borrowed any book");
-//            }
 
             // Collect the borrow history
             while (rs.next()) {
@@ -532,7 +497,6 @@ public class LibraryManagementSystemImpl implements LibraryManagementSystem {
                 borrow = new Borrow();
                 borrow.setBorrowTime(rs.getLong("borrow_time"));
                 borrow.setReturnTime(rs.getLong("return_time"));
-
 
                 item = new BorrowHistories.Item(cardId, book, borrow);
                 items.add(item);
